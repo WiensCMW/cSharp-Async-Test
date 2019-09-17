@@ -9,11 +9,14 @@ namespace ASyncTest
 {
     class Program
     {
+        #region Test Methods
         static void Main(string[] args)
         {
             TestCodeStandard();
 
             TestCodeAWait();
+
+            TestCodeTaskComposition();
 
             Console.ReadKey();
         }
@@ -49,7 +52,12 @@ namespace ASyncTest
             Console.WriteLine();
         }
 
-        private static async void TestCodeAWait()
+        private static void TestCodeAWait()
+        {
+            TestCodeAWait_Async();
+        }
+
+        private static async void TestCodeAWait_Async()
         {
             Stopwatch watch = new Stopwatch();
             watch.Restart();
@@ -68,7 +76,7 @@ namespace ASyncTest
 
             Bacon bacon = await taskBacon;
             Console.WriteLine("bacon is ready");
-            
+
             Toast toast = await taskToast;
             Console.WriteLine("toast is ready");
 
@@ -81,10 +89,49 @@ namespace ASyncTest
             ApplyJam(toast);
             Console.WriteLine("toast has been jammed!!!");
 
-            Console.WriteLine($"Standard Breakfast took {watch.Elapsed.TotalMilliseconds} ms to make");
+            Console.WriteLine($"AWait Breakfast took {watch.Elapsed.TotalMilliseconds} ms to make");
             Console.WriteLine();
             Console.WriteLine();
         }
+
+        private static void TestCodeTaskComposition()
+        {
+            TestCodeTaskComposition_Async();
+        }
+
+        private static async void TestCodeTaskComposition_Async()
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Restart();
+
+            var taskCoffee = Task.Run(() => PourCoffee());
+            var taskEggs = Task.Run(() => FryEggs(2));
+            var taskBacon = Task.Run(() => FryBacon(3));
+            //var taskToast = Task.Run(() => ToastBread(2));
+            var taskToast = Task.Run(() => MakeToastWithButterAndJamAsync(2));
+            var taskJuice = Task.Run(() => PourOJ());
+
+            Coffee cup = await taskCoffee;
+            Console.WriteLine("coffee is ready");
+
+            Egg eggs = await taskEggs;
+            Console.WriteLine("eggs are ready");
+
+            Bacon bacon = await taskBacon;
+            Console.WriteLine("bacon is ready");
+
+            Toast toast = await taskToast;
+            Console.WriteLine("toast is buttered and jammy!");
+
+            Juice oj = await taskJuice;
+            Console.WriteLine("oj is ready");
+
+            Console.WriteLine($"Task Composition Breakfast took {watch.Elapsed.TotalMilliseconds} ms to make");
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+        #endregion
+
 
         private static Coffee PourCoffee()
         {
@@ -126,6 +173,15 @@ namespace ASyncTest
         {
             BusyWork();
             toast.HasJam = true;
+        }
+
+        private static async Task<Toast> MakeToastWithButterAndJamAsync(int slices)
+        {
+            var taskToast = Task.Run(() => ToastBread(slices));
+            var toast = await taskToast;
+            ApplyButter(toast);
+            ApplyJam(toast);
+            return toast;
         }
 
         private static void BusyWork()
