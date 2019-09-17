@@ -14,8 +14,6 @@ namespace ASyncTest
         {
             TestCodeStandard();
 
-            TestCodeAWait();
-
             TestCodeTaskComposition();
 
             Console.ReadKey();
@@ -52,12 +50,7 @@ namespace ASyncTest
             Console.WriteLine();
         }
 
-        private static void TestCodeAWait()
-        {
-            TestCodeAWait_Async();
-        }
-
-        private static async void TestCodeAWait_Async()
+        private static async void TestCodeTaskComposition()
         {
             Stopwatch watch = new Stopwatch();
             watch.Restart();
@@ -65,49 +58,6 @@ namespace ASyncTest
             var taskCoffee = Task.Run(() => PourCoffee());
             var taskEggs = Task.Run(() => FryEggs(2));
             var taskBacon = Task.Run(() => FryBacon(3));
-            var taskToast = Task.Run(() => ToastBread(2));
-            var taskJuice = Task.Run(() => PourOJ());
-
-            Coffee cup = await taskCoffee;
-            Console.WriteLine("coffee is ready");
-
-            Egg eggs = await taskEggs;
-            Console.WriteLine("eggs are ready");
-
-            Bacon bacon = await taskBacon;
-            Console.WriteLine("bacon is ready");
-
-            Toast toast = await taskToast;
-            Console.WriteLine("toast is ready");
-
-            Juice oj = await taskJuice;
-            Console.WriteLine("oj is ready");
-
-            ApplyButter(toast);
-            Console.WriteLine("toast is buttered");
-
-            ApplyJam(toast);
-            Console.WriteLine("toast has been jammed!!!");
-
-            Console.WriteLine($"AWait Breakfast took {watch.Elapsed.TotalMilliseconds} ms to make");
-            Console.WriteLine();
-            Console.WriteLine();
-        }
-
-        private static void TestCodeTaskComposition()
-        {
-            TestCodeTaskComposition_Async();
-        }
-
-        private static async void TestCodeTaskComposition_Async()
-        {
-            Stopwatch watch = new Stopwatch();
-            watch.Restart();
-
-            var taskCoffee = Task.Run(() => PourCoffee());
-            var taskEggs = Task.Run(() => FryEggs(2));
-            var taskBacon = Task.Run(() => FryBacon(3));
-            //var taskToast = Task.Run(() => ToastBread(2));
             var taskToast = Task.Run(() => MakeToastWithButterAndJamAsync(2));
             var taskJuice = Task.Run(() => PourOJ());
 
