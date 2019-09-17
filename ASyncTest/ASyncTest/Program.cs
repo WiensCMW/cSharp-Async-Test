@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace ASyncTest
 {
@@ -10,6 +11,18 @@ namespace ASyncTest
     {
         static void Main(string[] args)
         {
+            TestCodeStandard();
+
+
+
+            Console.ReadKey();
+        }
+
+        private static void TestCodeStandard()
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Restart();
+
             Coffee cup = PourCoffee();
             Console.WriteLine("coffee is ready");
             Egg eggs = FryEggs(2);
@@ -23,7 +36,7 @@ namespace ASyncTest
             Juice oj = PourOJ();
             Console.WriteLine("oj is ready");
 
-            Console.WriteLine("Breakfast is ready!");
+            Console.WriteLine($"Standard Breakfast took {watch.Elapsed.TotalMilliseconds} ms to make");
             Console.ReadKey();
         }
 
