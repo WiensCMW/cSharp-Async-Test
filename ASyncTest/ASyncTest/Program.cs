@@ -13,7 +13,7 @@ namespace ASyncTest
         {
             TestCodeStandard();
 
-
+            TestCodeAWait();
 
             Console.ReadKey();
         }
@@ -25,66 +25,112 @@ namespace ASyncTest
 
             Coffee cup = PourCoffee();
             Console.WriteLine("coffee is ready");
+
             Egg eggs = FryEggs(2);
             Console.WriteLine("eggs are ready");
+
             Bacon bacon = FryBacon(3);
             Console.WriteLine("bacon is ready");
+
             Toast toast = ToastBread(2);
-            ApplyButter(toast);
-            ApplyJam(toast);
             Console.WriteLine("toast is ready");
+
+            ApplyButter(toast);
+            Console.WriteLine("toast is buttered");
+
+            ApplyJam(toast);
+            Console.WriteLine("toast has been jammed!!!");
+
             Juice oj = PourOJ();
             Console.WriteLine("oj is ready");
 
             Console.WriteLine($"Standard Breakfast took {watch.Elapsed.TotalMilliseconds} ms to make");
-            Console.ReadKey();
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+
+        private static async void TestCodeAWait()
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Restart();
+
+            Coffee cup = PourCoffee();
+            Console.WriteLine("coffee is ready");
+
+            var eggTask = Task.Run(() => FryEggs(2));
+            Egg eggs = await eggTask;
+            Console.WriteLine("eggs are ready");
+
+            var baconTask = Task.Run(() => FryBacon(3));
+            Bacon bacon = await baconTask;
+            Console.WriteLine("bacon is ready");
+
+            var toastTask = Task.Run(() => ToastBread(2));
+            Toast toast = await toastTask;
+            Console.WriteLine("toast is ready");
+
+            ApplyButter(toast);
+            Console.WriteLine("toast is buttered");
+
+            ApplyJam(toast);
+            Console.WriteLine("toast has been jammed!!!");
+
+            Juice oj = PourOJ();
+            Console.WriteLine("oj is ready");
+
+            Console.WriteLine($"Standard Breakfast took {watch.Elapsed.TotalMilliseconds} ms to make");
+            Console.WriteLine();
+            Console.WriteLine();
         }
 
         private static Coffee PourCoffee()
         {
-            SimulateWork(1000);
+            BusyWork();
             return new Coffee(100);
         }
 
         private static Egg FryEggs(int eggCount)
         {
-            SimulateWork(1000);
+            BusyWork();
             return new Egg(eggCount);
         }
 
         private static Bacon FryBacon(int count)
         {
-            SimulateWork(1000);
+            BusyWork();
             return new Bacon(count);
         }
 
         private static Toast ToastBread(int slices)
         {
-            SimulateWork(1000);
+            BusyWork();
             return new Toast(false, false);
         }
 
         private static Juice PourOJ()
         {
-            SimulateWork(1000);
+            BusyWork();
             return new Juice("Orange");
         }
 
         private static void ApplyButter(Toast toast)
         {
-            SimulateWork(1000);
+            BusyWork();
             toast.HasButter = true;
         }
 
         private static void ApplyJam(Toast toast)
         {
-            SimulateWork(1000);
+            BusyWork();
             toast.HasJam = true;
         }
 
-        private static void SimulateWork(int ms)
+        private static void BusyWork()
         {
-            System.Threading.Thread.Sleep(ms);
+            int loopCounter = 250000;
+            List<int> sampleData = new List<int>();
+            for (int i = 0; i < loopCounter; i++)
+                sampleData.Add(new Random(i).Next(0, i));
         }
     }
 
