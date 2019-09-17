@@ -54,29 +54,32 @@ namespace ASyncTest
             Stopwatch watch = new Stopwatch();
             watch.Restart();
 
-            Coffee cup = PourCoffee();
+            var taskCoffee = Task.Run(() => PourCoffee());
+            var taskEggs = Task.Run(() => FryEggs(2));
+            var taskBacon = Task.Run(() => FryBacon(3));
+            var taskToast = Task.Run(() => ToastBread(2));
+            var taskJuice = Task.Run(() => PourOJ());
+
+            Coffee cup = await taskCoffee;
             Console.WriteLine("coffee is ready");
 
-            var eggTask = Task.Run(() => FryEggs(2));
-            Egg eggs = await eggTask;
+            Egg eggs = await taskEggs;
             Console.WriteLine("eggs are ready");
 
-            var baconTask = Task.Run(() => FryBacon(3));
-            Bacon bacon = await baconTask;
+            Bacon bacon = await taskBacon;
             Console.WriteLine("bacon is ready");
-
-            var toastTask = Task.Run(() => ToastBread(2));
-            Toast toast = await toastTask;
+            
+            Toast toast = await taskToast;
             Console.WriteLine("toast is ready");
+
+            Juice oj = await taskJuice;
+            Console.WriteLine("oj is ready");
 
             ApplyButter(toast);
             Console.WriteLine("toast is buttered");
 
             ApplyJam(toast);
             Console.WriteLine("toast has been jammed!!!");
-
-            Juice oj = PourOJ();
-            Console.WriteLine("oj is ready");
 
             Console.WriteLine($"Standard Breakfast took {watch.Elapsed.TotalMilliseconds} ms to make");
             Console.WriteLine();
